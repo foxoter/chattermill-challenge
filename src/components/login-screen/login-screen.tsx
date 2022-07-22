@@ -5,14 +5,21 @@ import { Input } from "../kit/input";
 import { Heading } from "../kit/heading";
 import { Form, FormRow } from "../kit/form";
 import { PrimaryButton } from "../kit/button";
+import { login } from "../../api/feedback-api";
 import { LoginScreenRoot } from "./login-screen.styled";
+import { LoginCredentials } from "src/typings/login";
 
 export const LoginScreen: React.FC = () => {
-  const [formValue, setFormValue] = useState({ login: "", password: "" });
+  const [formValue, setFormValue] = useState<LoginCredentials>({
+    username: "",
+    password: "",
+  });
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    console.log(formValue);
+    login(formValue)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   const onInputChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -28,12 +35,12 @@ export const LoginScreen: React.FC = () => {
         <Heading>Log in</Heading>
         <Form>
           <FormRow>
-            <Label htmlFor={"login"}>Email</Label>
+            <Label htmlFor={"username"}>Email</Label>
             <Input
               type={"text"}
-              placeholder={"login"}
-              id={"login"}
-              value={formValue.login}
+              placeholder={"username"}
+              id={"username"}
+              value={formValue.username}
               onChange={onInputChange}
             />
           </FormRow>
