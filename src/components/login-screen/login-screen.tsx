@@ -5,11 +5,13 @@ import { Input } from "../kit/input";
 import { Heading } from "../kit/heading";
 import { Form, FormRow } from "../kit/form";
 import { PrimaryButton } from "../kit/button";
-import { login } from "../../api/feedback-api";
 import { LoginScreenRoot } from "./login-screen.styled";
 import { LoginCredentials } from "src/typings/login";
+import { Redirect } from "react-router-dom";
+import { useAuth } from "../../services/auth";
 
 export const LoginScreen: React.FC = () => {
+  const auth = useAuth();
   const [formValue, setFormValue] = useState<LoginCredentials>({
     username: "",
     password: "",
@@ -17,9 +19,7 @@ export const LoginScreen: React.FC = () => {
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    login(formValue)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+    auth?.signIn(formValue);
   };
 
   const onInputChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -27,6 +27,10 @@ export const LoginScreen: React.FC = () => {
     const { id, value } = target;
     setFormValue({ ...formValue, [id]: value });
   };
+
+  if (auth?.user) {
+    return <Redirect to={"/feed"} />;
+  }
 
   return (
     <LoginScreenRoot>

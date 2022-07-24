@@ -9,7 +9,7 @@ export const Routes: React.FC = () => {
       <Switch>
         <Route exact path={"/login"} component={LoginScreen} />
         <Route exact path={"/feed"} component={FeedScreen} />
-        <Redirect to={"/feed"} />
+        <Redirect to={"/login"} />
       </Switch>
     </BrowserRouter>
   );
