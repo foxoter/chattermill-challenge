@@ -2,6 +2,7 @@ import React, { useContext, createContext, useState } from "react";
 import { LoginCredentials, LoginResponse } from "../typings/login";
 import { login } from "../api/feedback-api";
 import { AxiosResponse } from "axios";
+import { setCookie, deleteCookie } from "../utils/cookie";
 
 interface AuthContextType {
   user: boolean | null;
@@ -27,7 +28,8 @@ export const useProvideAuth = () => {
     login(credentials)
       .then((data: AxiosResponse<LoginResponse>) => {
         console.log(data);
-        // set cookie
+        const token = `Bearer ${data.data.token}`;
+        setCookie("token", token);
         setUser(true);
       })
       .catch((err) => {
@@ -38,7 +40,7 @@ export const useProvideAuth = () => {
 
   const signOut = () => {
     setUser(false);
-    // delete cookie
+    deleteCookie("token");
   };
 
   return {
