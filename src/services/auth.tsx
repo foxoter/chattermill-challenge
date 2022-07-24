@@ -6,6 +6,7 @@ import { setCookie, deleteCookie, getCookie } from "../utils/cookie";
 
 interface AuthContextType {
   user: boolean | null;
+  error: boolean | null;
   signIn: (credentials: LoginCredentials) => void;
   signOut: () => void;
   checkAuth: () => void;
@@ -24,6 +25,7 @@ export const useAuth = () => {
 
 export const useProvideAuth = () => {
   const [user, setUser] = useState<boolean | null>(null);
+  const [error, setError] = useState<boolean | null>(null);
 
   const checkAuth = () => {
     if (getCookie("token")) {
@@ -39,10 +41,12 @@ export const useProvideAuth = () => {
         console.log(data);
         const token = `Bearer ${data.data.token}`;
         setCookie("token", token);
+        setError(false);
         setUser(true);
       })
       .catch((err) => {
         console.log(err);
+        setError(true);
         setUser(false);
       });
   };
@@ -54,6 +58,7 @@ export const useProvideAuth = () => {
 
   return {
     user,
+    error,
     signIn,
     signOut,
     checkAuth,

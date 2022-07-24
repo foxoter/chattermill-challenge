@@ -9,6 +9,7 @@ import { LoginScreenRoot } from "./login-screen.styled";
 import { LoginCredentials } from "src/typings/login";
 import { Redirect } from "react-router-dom";
 import { useAuth } from "../../services/auth";
+import { ErrorText } from "../kit/error";
 
 export const LoginScreen: React.FC = () => {
   const auth = useAuth();
@@ -62,6 +63,7 @@ export const LoginScreen: React.FC = () => {
               value={formValue.password}
             />
           </FormRow>
+          {auth?.error && <ErrorText>Invalid email or password.</ErrorText>}
           <FormRow>
             <PrimaryButton type={"submit"} onClick={onSubmit}>
               Log in
