@@ -2,12 +2,13 @@ import React, { useContext, createContext, useState } from "react";
 import { LoginCredentials, LoginResponse } from "../typings/login";
 import { login } from "../api/feedback-api";
 import { AxiosResponse } from "axios";
-import { setCookie, deleteCookie } from "../utils/cookie";
+import { setCookie, deleteCookie, getCookie } from "../utils/cookie";
 
 interface AuthContextType {
   user: boolean | null;
   signIn: (credentials: LoginCredentials) => void;
   signOut: () => void;
+  checkAuth: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -23,6 +24,14 @@ export const useAuth = () => {
 
 export const useProvideAuth = () => {
   const [user, setUser] = useState<boolean | null>(null);
+
+  const checkAuth = () => {
+    if (getCookie("token")) {
+      setUser(true);
+    } else {
+      setUser(false);
+    }
+  };
 
   const signIn = (credentials: LoginCredentials) => {
     login(credentials)
@@ -47,5 +56,6 @@ export const useProvideAuth = () => {
     user,
     signIn,
     signOut,
+    checkAuth,
   };
 };

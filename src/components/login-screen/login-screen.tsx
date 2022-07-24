@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import { Logo } from "../kit/logo";
 import { Label } from "../kit/label";
 import { Input } from "../kit/input";
@@ -16,6 +16,10 @@ export const LoginScreen: React.FC = () => {
     username: "",
     password: "",
   });
+
+  useEffect(() => {
+    auth?.checkAuth();
+  }, []);
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
