@@ -1,13 +1,13 @@
 import styled from "styled-components";
 
+type FormRowProps = {
+  withButton?: boolean;
+};
+
 export const Form = styled.form`
   display: grid;
   grid-gap: 18px 0;
 `;
-
-type FormRowProps = {
-  withButton?: boolean;
-};
 
 export const FormRow = styled.div`
   position: ${(props: FormRowProps) =>

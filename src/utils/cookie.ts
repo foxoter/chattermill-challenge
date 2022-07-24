@@ -1,3 +1,11 @@
+type Options = {
+  expires?: Date | number | string;
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+  ["max-age"]?: number;
+};
+
 export const getCookie = (name: string) => {
   const matches = document.cookie.match(
     new RegExp(
@@ -7,14 +15,6 @@ export const getCookie = (name: string) => {
     ),
   );
   return matches ? decodeURIComponent(matches[1]) : undefined;
-};
-
-type Options = {
-  expires?: Date | number | string;
-  path?: string;
-  domain?: string;
-  secure?: boolean;
-  ["max-age"]?: number;
 };
 
 export const setCookie = (name: string, value: string, options?: Options) => {
