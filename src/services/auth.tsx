@@ -38,15 +38,12 @@ export const useProvideAuth = () => {
   const signIn = (credentials: LoginCredentials) => {
     login(credentials)
       .then((data: AxiosResponse<LoginResponse>) => {
-        console.log(data);
-        const token = data.data.token;
-        const { expire } = data.data;
+        const { token, expire } = data.data;
         setCookie("token", token, { expires: expire });
         setError(false);
         setUser(true);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         setError(true);
         setUser(false);
       });

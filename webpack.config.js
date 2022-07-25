@@ -7,7 +7,7 @@ const isProductionMode = process.env.NODE_ENV === "production";
 /**
  * Windows specific error handling
  */
-process.on("uncaughtException", function(err) {
+process.on("uncaughtException", function (err) {
   console.error(err.stack);
 });
 
@@ -25,11 +25,16 @@ module.exports = {
   mode: isProductionMode ? "production" : "development",
   // The default "eval" value causes warnings about node_modules' source maps in
   // Chrome Dev Tools console.
-  devtool: !isProductionMode
-    ? "eval-cheap-source-map"
-    : "hidden-source-map",
+  devtool: !isProductionMode ? "eval-cheap-source-map" : "hidden-source-map",
   module: {
     rules: [
+      {
+        test: /\.(png|jpe?g|gif|jp2|webp)$/,
+        loader: "file-loader",
+        options: {
+          name: "images/[name].[ext]",
+        },
+      },
       {
         test: /\.ts(x?)$/,
         exclude: /node_modules/,
@@ -56,5 +61,5 @@ module.exports = {
     port: "3000",
     contentBase: path.join(__dirname, "dist"),
     historyApiFallback: true,
-  }
+  },
 };
