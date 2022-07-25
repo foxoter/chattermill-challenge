@@ -23,8 +23,8 @@ export const setCookie = (name: string, value: string, options?: Options) => {
     ...options,
   };
 
-  if (options.expires instanceof Date) {
-    options.expires = options.expires.toUTCString();
+  if (options.expires) {
+    options.expires = new Date(options.expires).toUTCString();
   }
 
   let updatedCookie =

@@ -39,8 +39,9 @@ export const useProvideAuth = () => {
     login(credentials)
       .then((data: AxiosResponse<LoginResponse>) => {
         console.log(data);
-        const token = `Bearer ${data.data.token}`;
-        setCookie("token", token);
+        const token = data.data.token;
+        const { expire } = data.data;
+        setCookie("token", token, { expires: expire });
         setError(false);
         setUser(true);
       })

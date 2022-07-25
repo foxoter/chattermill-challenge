@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { getThemes } from "../../api/feedback-api";
 import { useAuth } from "../../services/auth";
 import { SecondaryButton } from "../kit/button";
 import { Header } from "../kit/header";
@@ -19,6 +20,12 @@ export const FeedScreen: React.FC = () => {
   const onLogOut = () => {
     auth?.signOut();
   };
+
+  useEffect(() => {
+    getThemes()
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  }, []);
 
   const feedbackItems: FeedbackItem[] = [
     {

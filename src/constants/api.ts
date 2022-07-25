@@ -3,4 +3,5 @@ export const API_BASE =
 
 export const feedBackEndpoints = {
   login: "/login",
+  themes: "/api/themes",
 };
