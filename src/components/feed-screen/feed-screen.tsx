@@ -1,4 +1,8 @@
 import React from "react";
+import { useAuth } from "../../services/auth";
+import { SecondaryButton } from "../kit/button";
+import { Header } from "../kit/header";
+import { Logo } from "../kit/logo";
 import { FeedScreenRoot } from "./feed-screen.styled";
 
 type Sentiment = "positive" | "neutral" | "negative";
@@ -10,6 +14,12 @@ interface FeedbackItem {
 }
 
 export const FeedScreen: React.FC = () => {
+  const auth = useAuth();
+
+  const onLogOut = () => {
+    auth?.signOut();
+  };
+
   const feedbackItems: FeedbackItem[] = [
     {
       id: "id1",
@@ -25,6 +35,10 @@ export const FeedScreen: React.FC = () => {
 
   return (
     <FeedScreenRoot>
+      <Header>
+        <Logo />
+        <SecondaryButton onClick={onLogOut}>Log out</SecondaryButton>
+      </Header>
       {feedbackItems.map((feedbackItem) => (
         <div key={feedbackItem.id} data-testid={"feedback-item"}>
           {feedbackItem.text}

@@ -40,3 +40,19 @@ export const PrimaryButton = styled(Button)`
     background: #21519c;
   }
 `;
+
+export const SecondaryButton = styled(Button)`
+  border-radius: 10px;
+  border: 1px solid #d4d8e0;
+  padding: 10px 20px;
+  color: #908fb9;
+  background: #fbfbfb;
+
+  &:hover {
+    background: #ebebeb;
+  }
+
+  &:active {
+    background: #d9d9d9;
+  }
+`;
