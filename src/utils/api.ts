@@ -24,7 +24,6 @@ export const getOffsetsArray = (batches: number, step: number): number[] => {
 };
 
 export const mapAllThemesToOptions = (res: AllThemesResponse) => {
-  console.log(res);
   const data = res.map((response) => response.data.data);
-  return data.flat().map(item => ({ value: item.id, label: item.name }));
+  return data.flat().map((item) => ({ value: item.id, label: item.name }));
 };
