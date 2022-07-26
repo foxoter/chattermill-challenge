@@ -3,6 +3,7 @@ import {
   AllThemesResponse,
   ReviewTheme,
   ThemesFilterOptions,
+  ThemeFilter,
 } from "../../typings/feed";
 import { getReviews, getAllThemes } from "../../api/feedback-api";
 import { useAuth } from "../../services/auth";
@@ -22,10 +23,17 @@ type ReviewsState = {
   reviews: FeedbackItem[] | null;
 };
 
+type ThemesFilterState = {
+  options: ThemesFilterOptions | [];
+  currentFilter: ThemeFilter | null;
+};
+
 export const FeedScreen: React.FC = () => {
-  const [themeOptions, setThemeOptions] = useState<ThemesFilterOptions | []>(
-    [],
-  );
+  const [themesFilter, setThemesFilter] = useState<ThemesFilterState>({
+    options: [],
+    currentFilter: null,
+  });
+  console.log("curr filt", themesFilter.currentFilter);
   const [reviewsState, setReviewsState] = useState<ReviewsState>({
     offset: 0,
     reviews: null,
@@ -34,6 +42,10 @@ export const FeedScreen: React.FC = () => {
 
   const onLogOut = () => {
     auth?.signOut();
+  };
+
+  const onSelectChange = (option: ThemeFilter) => {
+    setThemesFilter({ ...themesFilter, currentFilter: option });
   };
 
   const loadMoreReviews = () => {
@@ -57,7 +69,7 @@ export const FeedScreen: React.FC = () => {
       .then(([themes, reviews]) => {
         const themesData = mapAllThemesToOptions(themes as AllThemesResponse);
         const reviewsData = reviews.data.data;
-        setThemeOptions(themesData);
+        setThemesFilter({ ...themesFilter, options: themesData });
         setReviewsState({
           reviews: reviewsData,
           offset: reviewsState.offset + OFFSET_STEP,
@@ -74,7 +86,9 @@ export const FeedScreen: React.FC = () => {
       </Header>
       <SectionContainer>
         <StyledSelect
-          options={themeOptions}
+          options={themesFilter.options}
+          onChange={(option) => onSelectChange(option as ThemeFilter)}
+          value={themesFilter.currentFilter}
           isClearable
           placeholder={"All themes"}
         />
@@ -84,7 +98,7 @@ export const FeedScreen: React.FC = () => {
               const themesWithTitles = feedbackItem.themes.map(
                 (theme: ReviewTheme) => ({
                   ...theme,
-                  title: themeOptions.find(
+                  title: themesFilter.options.find(
                     (option) => option.value === theme.theme_id,
                   )?.label,
                 }),

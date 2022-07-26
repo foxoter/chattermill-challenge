@@ -28,4 +28,6 @@ export interface FeedbackItem {
 
 export type AllThemesResponse = Array<AxiosResponse<{ data: Theme[] }>>;
 
-export type ThemesFilterOptions = Array<{ value: number; label: string }>;
+export type ThemeFilter = { value: number; label: string }
+
+export type ThemesFilterOptions = Array<ThemeFilter>;
