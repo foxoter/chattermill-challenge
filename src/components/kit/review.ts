@@ -35,7 +35,7 @@ export const ThemeLabel = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px;
+  padding: 8px;
   background-color: ${({ negative }: ThemeLabelProps) =>
     negative ? "#ee30741a" : "#25b1491a"};
   border-radius: 10px;

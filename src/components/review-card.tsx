@@ -15,13 +15,9 @@ export const ReviewCard: React.FC<FeedbackItem> = ({
   themes,
 }) => {
   const created = timeAgo(created_at);
-  console.log(themes);
   return (
     <Review>
       <Text>{comment}</Text>
-      <Text fz={12} lh={16} color="#8e899d">
-        {created}
-      </Text>
       <ThemeLabelsContainer>
         {themes.map((theme: ReviewTheme) => (
           <ThemeLabel
@@ -32,11 +28,14 @@ export const ReviewCard: React.FC<FeedbackItem> = ({
               <ThemeIcon sentiment={theme.sentiment} />
             )}
             <Text fz={12} lh={16} color="#8e899d">
-              {"Theme name"}
+              {theme.title}
             </Text>
           </ThemeLabel>
         ))}
       </ThemeLabelsContainer>
+      <Text fz={12} lh={16} color="#8e899d">
+        {created}
+      </Text>
     </Review>
   );
 };

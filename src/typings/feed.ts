@@ -1,3 +1,5 @@
+import { AxiosResponse } from "axios";
+
 export interface Theme {
   id: number;
   name: string;
@@ -12,6 +14,7 @@ export enum Sentiment {
 export interface ReviewTheme {
   theme_id: number;
   sentiment: Sentiment;
+  title?: string;
 }
 
 export type ReviewThemes = Array<ReviewTheme>;
@@ -22,3 +25,7 @@ export interface FeedbackItem {
   themes: ReviewThemes;
   created_at: string;
 }
+
+export type AllThemesResponse = Array<AxiosResponse<{ data: Theme[] }>>;
+
+export type ThemesFilterOptions = Array<{ value: number; label: string }>;
