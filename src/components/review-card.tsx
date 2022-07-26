@@ -8,6 +8,7 @@ import {
 } from "./kit/review";
 import { Text } from "./kit/text";
 import { FeedbackItem, ReviewTheme, Sentiment } from "../typings/feed";
+import { generateListKey } from "../utils/common";
 
 export const ReviewCard: React.FC<FeedbackItem> = ({
   comment,
@@ -22,7 +23,7 @@ export const ReviewCard: React.FC<FeedbackItem> = ({
         {themes.map((theme: ReviewTheme) => (
           <ThemeLabel
             negative={theme.sentiment === Sentiment.NEGATIVE}
-            key={theme.theme_id}
+            key={generateListKey(theme.title)}
           >
             {theme.sentiment !== Sentiment.NEUTRAL && (
               <ThemeIcon sentiment={theme.sentiment} />

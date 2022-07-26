@@ -1,6 +1,13 @@
 import styled from "styled-components";
 
+type ButtonProps = {
+  w?: number;
+  centered?: boolean;
+};
+
 export const Button = styled.button`
+  width: ${({ w }: ButtonProps) => (w ? `${w}px` : "auto")};
+  margin: ${({ centered }: ButtonProps) => (centered ? "0 auto" : "")};
   font-family: inherit;
   font-size: 14px;
   line-height: 1;

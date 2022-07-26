@@ -29,6 +29,7 @@ export const Review = styled.div`
 export const ThemeLabelsContainer = styled.div`
   display: flex;
   gap: 6px;
+  flex-wrap: wrap;
 `;
 
 export const ThemeLabel = styled.div`

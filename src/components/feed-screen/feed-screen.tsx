@@ -6,51 +6,62 @@ import {
 } from "../../typings/feed";
 import { getReviews, getAllThemes } from "../../api/feedback-api";
 import { useAuth } from "../../services/auth";
-import { SecondaryButton } from "../kit/button";
+import { PrimaryButton, SecondaryButton } from "../kit/button";
 import { Header } from "../kit/header";
 import { Logo } from "../kit/logo";
+import { SectionContainer } from "../kit/container";
 import { StyledSelect } from "../kit/select";
 import { FeedScreenRoot } from "./feed-screen.styled";
 import { FeedbackItem } from "../../typings/feed";
 import { ReviewCard } from "../review-card";
 import { mapAllThemesToOptions } from "../../utils/api";
+import { OFFSET_STEP } from "../../constants/api";
 
-// const feedbackItems: FeedbackItem[] = [
-//   {
-//     id: "id1",
-//     comment: "first feedback item",
-//     themes: [
-//       { theme_id: 6372, sentiment: 1 },
-//       { theme_id: 6352, sentiment: -1 },
-//     ],
-//     created_at: "2019-07-18T23:10:33Z",
-//   },
-//   {
-//     id: "id2",
-//     comment: "second feedback item",
-//     themes: [{ theme_id: 6345, sentiment: 0 }],
-//     created_at: "2019-07-18T23:10:33Z",
-//   },
-// ];
+type ReviewsState = {
+  offset: number;
+  reviews: FeedbackItem[] | null;
+};
 
 export const FeedScreen: React.FC = () => {
   const [themeOptions, setThemeOptions] = useState<ThemesFilterOptions | []>(
     [],
   );
-  const [reviews, setReviews] = useState<FeedbackItem[] | null>(null);
+  const [reviewsState, setReviewsState] = useState<ReviewsState>({
+    offset: 0,
+    reviews: null,
+  });
   const auth = useAuth();
 
   const onLogOut = () => {
     auth?.signOut();
   };
 
+  const loadMoreReviews = () => {
+    getReviews({ offset: reviewsState.offset })
+      .then((res) => {
+        const newBatch = res.data.data;
+        const updatedReviews = reviewsState.reviews && [
+          ...reviewsState.reviews,
+          ...newBatch,
+        ];
+        setReviewsState({
+          reviews: updatedReviews,
+          offset: reviewsState.offset + OFFSET_STEP,
+        });
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
-    Promise.all([getAllThemes(), getReviews()])
+    Promise.all([getAllThemes(), getReviews({ offset: reviewsState.offset })])
       .then(([themes, reviews]) => {
         const themesData = mapAllThemesToOptions(themes as AllThemesResponse);
         const reviewsData = reviews.data.data;
         setThemeOptions(themesData);
-        setReviews(reviewsData);
+        setReviewsState({
+          reviews: reviewsData,
+          offset: reviewsState.offset + OFFSET_STEP,
+        });
       })
       .catch((err) => console.log(err));
   }, []);
@@ -61,29 +72,36 @@ export const FeedScreen: React.FC = () => {
         <Logo />
         <SecondaryButton onClick={onLogOut}>Log out</SecondaryButton>
       </Header>
-      <StyledSelect
-        options={themeOptions}
-        isClearable
-        placeholder={"All themes"}
-      />
-      {reviews &&
-        reviews.map((feedbackItem: FeedbackItem) => {
-          const themesWithTitles = feedbackItem.themes.map(
-            (theme: ReviewTheme) => ({
-              ...theme,
-              title: themeOptions.find(
-                (option) => option.value === theme.theme_id,
-              )?.label,
-            }),
-          );
-          return (
-            <ReviewCard
-              key={feedbackItem.id}
-              {...feedbackItem}
-              themes={themesWithTitles}
-            />
-          );
-        })}
+      <SectionContainer>
+        <StyledSelect
+          options={themeOptions}
+          isClearable
+          placeholder={"All themes"}
+        />
+        <div>
+          {reviewsState.reviews &&
+            reviewsState.reviews.map((feedbackItem: FeedbackItem) => {
+              const themesWithTitles = feedbackItem.themes.map(
+                (theme: ReviewTheme) => ({
+                  ...theme,
+                  title: themeOptions.find(
+                    (option) => option.value === theme.theme_id,
+                  )?.label,
+                }),
+              );
+              return (
+                <ReviewCard
+                  key={feedbackItem.id}
+                  {...feedbackItem}
+                  themes={themesWithTitles}
+                />
+              );
+            })}
+        </div>
+        <PrimaryButton w={180} centered onClick={loadMoreReviews}>
+          Load more
+        </PrimaryButton>
+      </SectionContainer>
     </FeedScreenRoot>
   );
 };
