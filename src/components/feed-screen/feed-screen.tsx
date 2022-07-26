@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   AllThemesResponse,
   ReviewTheme,
   ThemesFilterOptions,
   ThemeFilter,
+  LoadingStatus,
 } from "../../typings/feed";
 import { getReviews, getAllThemes } from "../../api/feedback-api";
 import { useAuth } from "../../services/auth";
@@ -17,10 +18,12 @@ import { FeedbackItem } from "../../typings/feed";
 import { ReviewCard } from "../review-card";
 import { mapAllThemesToOptions } from "../../utils/api";
 import { OFFSET_STEP } from "../../constants/api";
+import { filterReviews, filterEnabledOptions } from "../../utils/feed";
 
 type ReviewsState = {
   offset: number;
   reviews: FeedbackItem[] | null;
+  // status: LoadingStatus;
 };
 
 type ThemesFilterState = {
@@ -29,19 +32,25 @@ type ThemesFilterState = {
 };
 
 export const FeedScreen: React.FC = () => {
+  const auth = useAuth();
   const [themesFilter, setThemesFilter] = useState<ThemesFilterState>({
     options: [],
     currentFilter: null,
   });
-  console.log("curr filt", themesFilter.currentFilter);
   const [reviewsState, setReviewsState] = useState<ReviewsState>({
     offset: 0,
     reviews: null,
   });
-  const auth = useAuth();
 
-  const onLogOut = () => {
-    auth?.signOut();
+  const enabledFilters =
+    (reviewsState.reviews && filterEnabledOptions(reviewsState.reviews)) || [];
+
+  const reviewsToRender =
+    reviewsState.reviews &&
+    filterReviews(reviewsState.reviews, themesFilter.currentFilter);
+
+  const checkIsOptionDisabled = (enabled: number[], option: ThemeFilter) => {
+    return !enabled.includes(option.value);
   };
 
   const onSelectChange = (option: ThemeFilter) => {
@@ -62,6 +71,10 @@ export const FeedScreen: React.FC = () => {
         });
       })
       .catch((err) => console.log(err));
+  };
+
+  const onLogOut = () => {
+    auth?.signOut();
   };
 
   useEffect(() => {
@@ -86,15 +99,19 @@ export const FeedScreen: React.FC = () => {
       </Header>
       <SectionContainer>
         <StyledSelect
+          isDisabled={!themesFilter.options.length}
           options={themesFilter.options}
           onChange={(option) => onSelectChange(option as ThemeFilter)}
           value={themesFilter.currentFilter}
           isClearable
           placeholder={"All themes"}
+          isOptionDisabled={(option) =>
+            checkIsOptionDisabled(enabledFilters, option as ThemeFilter)
+          }
         />
         <div>
-          {reviewsState.reviews &&
-            reviewsState.reviews.map((feedbackItem: FeedbackItem) => {
+          {reviewsToRender &&
+            reviewsToRender.map((feedbackItem: FeedbackItem) => {
               const themesWithTitles = feedbackItem.themes.map(
                 (theme: ReviewTheme) => ({
                   ...theme,
@@ -112,9 +129,11 @@ export const FeedScreen: React.FC = () => {
               );
             })}
         </div>
-        <PrimaryButton w={180} centered onClick={loadMoreReviews}>
-          Load more
-        </PrimaryButton>
+        {reviewsToRender && (
+          <PrimaryButton w={180} centered onClick={loadMoreReviews}>
+            Load more
+          </PrimaryButton>
+        )}
       </SectionContainer>
     </FeedScreenRoot>
   );

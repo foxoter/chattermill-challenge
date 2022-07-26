@@ -11,6 +11,12 @@ export enum Sentiment {
   NEGATIVE = -1,
 }
 
+export enum LoadingStatus {
+  Loading = "LOADING",
+  Success = "SUCCESS",
+  Failed = "FAILED",
+}
+
 export interface ReviewTheme {
   theme_id: number;
   sentiment: Sentiment;
@@ -28,6 +34,6 @@ export interface FeedbackItem {
 
 export type AllThemesResponse = Array<AxiosResponse<{ data: Theme[] }>>;
 
-export type ThemeFilter = { value: number; label: string }
+export type ThemeFilter = { value: number; label: string };
 
 export type ThemesFilterOptions = Array<ThemeFilter>;
