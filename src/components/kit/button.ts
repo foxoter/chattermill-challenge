@@ -1,6 +1,13 @@
 import styled from "styled-components";
 
+type ButtonProps = {
+  w?: number;
+  centered?: boolean;
+};
+
 export const Button = styled.button`
+  width: ${({ w }: ButtonProps) => (w ? `${w}px` : "auto")};
+  margin: ${({ centered }: ButtonProps) => (centered ? "0 auto" : "")};
   font-family: inherit;
   font-size: 14px;
   line-height: 1;
@@ -38,5 +45,21 @@ export const PrimaryButton = styled(Button)`
 
   &:active {
     background: #21519c;
+  }
+`;
+
+export const SecondaryButton = styled(Button)`
+  border-radius: 10px;
+  border: 1px solid #d4d8e0;
+  padding: 10px 20px;
+  color: #908fb9;
+  background: #fbfbfb;
+
+  &:hover {
+    background: #ebebeb;
+  }
+
+  &:active {
+    background: #d9d9d9;
   }
 `;
