@@ -7,6 +7,8 @@ The app requires authorization with the following credentials:
 - username: `chattermill`,
 - password: `SuperSecretChattermillPassword!`
 
+[Challenge description](CHALLENGE.md)
+
 ## Running the project
 
 In the project directory, first run `yarn` to install all the dependencies.
