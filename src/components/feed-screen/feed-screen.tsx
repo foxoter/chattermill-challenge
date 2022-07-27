@@ -1,10 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AllThemesResponse,
   ReviewTheme,
   ThemesFilterOptions,
   ThemeFilter,
-  LoadingStatus,
 } from "../../typings/feed";
 import { getReviews, getAllThemes } from "../../api/feedback-api";
 import { useAuth } from "../../services/auth";
@@ -23,7 +22,6 @@ import { filterReviews, filterEnabledOptions } from "../../utils/feed";
 type ReviewsState = {
   offset: number;
   reviews: FeedbackItem[] | null;
-  // status: LoadingStatus;
 };
 
 type ThemesFilterState = {

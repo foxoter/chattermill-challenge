@@ -1,4 +1,4 @@
-import { AllThemesResponse, ThemesFilterOptions } from "../typings/feed";
+import { AllThemesResponse } from "../typings/feed";
 import { API_BASE } from "../constants/api";
 
 export interface ReviewsRequestOptions {
